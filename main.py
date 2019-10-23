@@ -30,7 +30,7 @@ def main():
 
     # Inference mode
     if args.evaluate:
-        Tester(model, device, criterion, args.print_freq)(test_loader)()
+        Tester(model, device, criterion)(test_loader)
         return
 
     # Define optimizer and scheduler

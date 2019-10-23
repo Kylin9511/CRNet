@@ -27,16 +27,16 @@ class CRBlock(nn.Module):
     def __init__(self):
         super(CRBlock, self).__init__()
         self.path1 = nn.Sequential(OrderedDict([
-            ('0 conv3x3', ConvBN(2, 7, 3)),
-            ('1 relu', nn.LeakyReLU(negative_slope=0.3, inplace=True)),
-            ('2 conv1x9', ConvBN(7, 7, [1, 9])),
-            ('3 relu', nn.LeakyReLU(negative_slope=0.3, inplace=True)),
-            ('4 conv9x1', ConvBN(7, 7, [9, 1])),
+            ('conv3x3', ConvBN(2, 7, 3)),
+            ('relu1', nn.LeakyReLU(negative_slope=0.3, inplace=True)),
+            ('conv1x9', ConvBN(7, 7, [1, 9])),
+            ('relu2', nn.LeakyReLU(negative_slope=0.3, inplace=True)),
+            ('conv9x1', ConvBN(7, 7, [9, 1])),
         ]))
         self.path2 = nn.Sequential(OrderedDict([
-            ('0 conv1x5', ConvBN(2, 7, [1, 5])),
-            ('1 relu', nn.LeakyReLU(negative_slope=0.3, inplace=True)),
-            ('2 conv5x1', ConvBN(7, 7, [5, 1])),
+            ('conv1x5', ConvBN(2, 7, [1, 5])),
+            ('relu', nn.LeakyReLU(negative_slope=0.3, inplace=True)),
+            ('conv5x1', ConvBN(7, 7, [5, 1])),
         ]))
         self.conv1x1 = ConvBN(7 * 2, 2, 1)
         self.identity = nn.Identity()
@@ -61,26 +61,26 @@ class CRNet(nn.Module):
         total_size, in_channel, w, h = 2048, 2, 32, 32
         logger.info(f'reduction={reduction}')
         self.encoder1 = nn.Sequential(OrderedDict([
-            ("0 conv3x3_bn", ConvBN(in_channel, 2, 3)),
-            ("1 relu", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
-            ("2 conv1x9_bn", ConvBN(2, 2, [1, 9])),
-            ("3 relu", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
-            ("4 conv9x1_bn", ConvBN(2, 2, [9, 1])),
+            ("conv3x3_bn", ConvBN(in_channel, 2, 3)),
+            ("relu1", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
+            ("conv1x9_bn", ConvBN(2, 2, [1, 9])),
+            ("relu2", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
+            ("conv9x1_bn", ConvBN(2, 2, [9, 1])),
         ]))
         self.encoder2 = ConvBN(in_channel, 2, 3)
         self.encoder_conv = nn.Sequential(OrderedDict([
-            ("0 relu", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
-            ("1 conv1x1_bn", ConvBN(4, 2, 1)),
-            ("2 relu", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
+            ("relu1", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
+            ("conv1x1_bn", ConvBN(4, 2, 1)),
+            ("relu2", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
         ]))
         self.encoder_fc = nn.Linear(total_size, total_size // reduction)
 
         self.decoder_fc = nn.Linear(total_size // reduction, total_size)
         decoder = OrderedDict([
-            ("0 conv5x5_bn", ConvBN(2, 2, 5)),
-            ("1 relu", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
-            ("2 CRBlock1", CRBlock()),
-            ("3 CRBlock2", CRBlock())
+            ("conv5x5_bn", ConvBN(2, 2, 5)),
+            ("relu", nn.LeakyReLU(negative_slope=0.3, inplace=True)),
+            ("CRBlock1", CRBlock()),
+            ("CRBlock2", CRBlock())
         ])
         self.decoder_feature = nn.Sequential(decoder)
         self.sigmoid = nn.Sigmoid()

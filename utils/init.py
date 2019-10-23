@@ -3,7 +3,7 @@ import random
 import thop
 import torch
 
-import models
+from models import crnet
 from utils import logger, line_seg
 
 __all__ = ["init_device", "init_model"]
@@ -42,7 +42,7 @@ def init_device(seed=None, cpu=None, gpu=None, affinity=None):
 
 def init_model(args):
     # Model loading
-    model = models.__dict__[args.arch](reduction=args.cr)
+    model = crnet(reduction=args.cr)
 
     if args.pretrained is not None:
         assert os.path.isfile(args.pretrained)
@@ -57,7 +57,7 @@ def init_model(args):
     flops, params = thop.clever_format([flops, params], "%.3f")
 
     # Model info logging
-    logger.info(f'=> Model Name: [{args.arch} (pretrained: {args.pretrained})]')
+    logger.info(f'=> Model Name: CRNet [pretrained: {args.pretrained}]')
     logger.info(f'=> Model Config: compression ratio=1/{args.cr}')
     logger.info(f'=> Model Flops: {flops}')
     logger.info(f'=> Model Params Num: {params}\n')
