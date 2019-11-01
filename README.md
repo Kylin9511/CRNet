@@ -1,6 +1,6 @@
 ## Overview
 
-This is the PyTorch implementation of paper [Multi-resolution CSI Feedback with deep learning in Massive MIMO System](TODO:arxivlink).
+This is the PyTorch implementation of paper [Multi-resolution CSI Feedback with deep learning in Massive MIMO System](https://arxiv.org/abs/1910.14322).
 
 ## Requirements
 
