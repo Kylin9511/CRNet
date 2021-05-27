@@ -68,16 +68,16 @@ The main results reported in our paper are presented as follows. All the listed 
 
 Scenario | Compression Ratio | NMSE | Flops | Checkpoints
 :--: | :--: | :--: | :--: | :--:
-indoor | 1/4 | -26.99 | 7.66M | in_04.pth
-indoor | 1/8 | -16.01 | 5.56M | in_08.pth
-indoor | 1/16 | -11.35 | 4.51M | in_16.pth
-indoor | 1/32 | -8.93 | 3.99M | in_32.pth
-indoor | 1/64 | -6.49 | 3.72M | in_64.pth
-outdoor | 1/4 | -12.70 | 7.66M | out_04.pth
-outdoor | 1/8 | -8.04 | 5.56M | out_08.pth
-outdoor | 1/16 | -5.44 | 4.51M | out_16.pth
-outdoor | 1/32 | -3.51 | 3.99M | out_32.pth
-outdoor | 1/64 | -2.22 | 3.72M | out_64.pth
+indoor | 1/4 | -26.99 | 5.12M | in_04.pth
+indoor | 1/8 | -16.01 | 4.07M | in_08.pth
+indoor | 1/16 | -11.35 | 3.55M | in_16.pth
+indoor | 1/32 | -8.93 | 3.28M | in_32.pth
+indoor | 1/64 | -6.49 | 3.16M | in_64.pth
+outdoor | 1/4 | -12.70 | 5.12M | out_04.pth
+outdoor | 1/8 | -8.04 | 4.07M | out_08.pth
+outdoor | 1/16 | -5.44 | 3.55M | out_16.pth
+outdoor | 1/32 | -3.51 | 3.28M | out_32.pth
+outdoor | 1/64 | -2.22 | 3.16M | out_64.pth
 
 As aforementioned, we provide model checkpoints for all the results. Our code library supports easy inference. 
 
@@ -87,8 +87,8 @@ As aforementioned, we provide model checkpoints for all the results. Our code li
 python /home/CRNet/main.py \
   --data-dir '/home/COST2100' \
   --scenario 'in' \
-  --pretrained './checkpoints/in_04' \  # Pretrained model loading
-  --evaluate \  # Inference mode
+  --pretrained './checkpoints/in_04' \
+  --evaluate \
   --batch-size 200 \
   --workers 0 \
   --cr 4 \
