@@ -1,4 +1,5 @@
 import torch
+from packaging import version
 
 __all__ = ['AverageMeter', 'evaluator']
 
@@ -56,8 +57,14 @@ def evaluator(sparse_pred, sparse_gt, raw_gt):
         n = sparse_pred.size(0)
         sparse_pred = sparse_pred.permute(0, 2, 3, 1)  # Move the real/imaginary dim to the last
         zeros = sparse_pred.new_zeros((n, nt, nc_expand - nc, 2))
-        sparse_pred = torch.cat((sparse_pred, zeros), dim=2)
-        raw_pred = torch.fft(sparse_pred, signal_ndim=1)[:, :, :125, :]
+        # When pytorch version is above 1.7.0, complex number representation is changed from [a, b] to [a, b.j]
+        if version.parse(torch.__version__) > version.parse("1.7.0"):
+            sparse_pred = torch.view_as_complex(torch.cat((sparse_pred, zeros), dim=2))
+            raw_pred = torch.view_as_real(torch.fft.fft(sparse_pred))[:, :, :125, :]
+        else:
+            sparse_pred = torch.cat((sparse_pred, zeros), dim=2)
+            raw_pred = torch.fft(sparse_pred, signal_ndim=1)[:, :, :125, :]
+          
 
         norm_pred = raw_pred[..., 0] ** 2 + raw_pred[..., 1] ** 2
         norm_pred = torch.sqrt(norm_pred.sum(dim=1))
